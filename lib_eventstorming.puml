@@ -1,212 +1,279 @@
-@startuml
-!include lib_eventstorming.puml
-actor Teacher as Teacher
+!global $ICON_FORMAT="png"
+!global $TEXT_WIDTH_MAX=200
+!global $MSG_WIDTH_MAX=150
+!global $FONT_SIZE_XS=10
+!global $FONT_SIZE_SM=12
+!global $FONT_SIZE_MD=16
+!global $FONT_SIZE_LG=20
+!global $FONT_COLOR="#212121"
+!global $FONT_COLOR_LIGHT="#757575"
 
+!procedure EsEntity($shape, $stereotype, $id, $label="")
+  !if ($label != "")
+    $shape "$label" as $id <<$stereotype>>
+  !else
+    $shape $id <<$stereotype>>
+  !endif
+!endprocedure
 
-Aggregate("Student")
+show stereotype
 
+skinparam defaultTextAlignment center
+skinparam wrapWidth 200
+skinparam maxMessageSize 150
 
-    Command("CreateCourseCommand")
-    Command("UpdateCourseCommand")
-    Command("DeleteStudentCommand")
-
-
-Command("CreateStudentPackageCommand")
-
-
-    Command("ToggleNotificationCommand")
-    Command("CreateStudentCommand")
-    Command("UpdateStudentCommand")       
-    Command("CreateCustomHolidayCommand")
-    Command("UpdateCustomHolidayCommand")
-    Command("DeleteCustomHolidayCommand")
-    Command("AssignDayAsCustomHolidyCommand")
-
-
-Teacher --> ToggleNotificationCommand
-
-Handler("CreateCourseHandler")
-Event("CourseCreatedEvent")
-CreateCourseCommand --> CreateCourseHandler : "processed by"
-CreateCourseHandler --> CourseCreatedEvent
-Handler("UpdateCourseHandler")
-Event("CourseUpdatedEvent")
-UpdateCourseCommand --> UpdateCourseHandler : "processed by"
-UpdateCourseHandler --> CourseUpdatedEvent
-Handler("DeleteStudentHandler")
-Event("StudentDeletedEvent")
-DeleteStudentCommand --> DeleteStudentHandler : "processed by"
-DeleteStudentHandler --> StudentDeletedEvent
-Handler("UpdateStudentHandler")
-Event("StudentUpdatedEvent")
-UpdateStudentCommand --> UpdateStudentHandler : "processed by"
-UpdateStudentHandler --> StudentUpdatedEvent
-Teacher --> UpdateCustomHolidayCommand
-Handler("UpdateCustomHolidayHandler") 
-UpdateCustomHolidayCommand --> UpdateCustomHolidayHandler : "processed by"
-Event("CustomHolidayUpdatedEvent")
-UpdateCustomHolidayHandler --> CustomHolidayUpdatedEvent
-
-Teacher --> DeleteCustomHolidayCommand
-Handler("DeleteCustomHolidayHandler")
-DeleteCustomHolidayCommand --> DeleteCustomHolidayHandler : "processed by"
-Event("CustomHolidayDeletedEvent")
-DeleteCustomHolidayHandler --> CustomHolidayDeletedEvent 
-Handler("CreateCustomHolidayHandler")
-Event("CustomHolidayCreatedEvent")
-CreateCustomHolidayCommand --> CreateCustomHolidayHandler : "processed by"
-CreateCustomHolidayHandler --> CustomHolidayCreatedEvent
-Handler("CreateStudentHandler")
-Event("StudentCreatedEvent")
-CreateStudentCommand --> CreateStudentHandler : "processed by"
-CreateStudentHandler --> StudentCreatedEvent
-Event("DayAssignedAsCustomHolidayEvent")
-
-Handler("AssignDayAsCustomHolidyHandler")
-AssignDayAsCustomHolidyCommand --> AssignDayAsCustomHolidyHandler : "processed by"
-AssignDayAsCustomHolidyHandler --> DayAssignedAsCustomHolidayEvent
-
-Handler("ToggleNotificationHandler")
-ToggleNotificationCommand --> ToggleNotificationHandler  : "processed by"
-Event("NotificationWasToggled")
-ToggleNotificationHandler --> NotificationWasToggled
-
-together{
-    Command("CreateClassesCommand")[
-        CreateClassesCommand
-        --validations--
-        **1.** The new total minutes of all classes cannot exceed the limit of the student package
-        **2.** Cannot overlap with existing classes that the student possesses
-    ]
-    Aggregate("StudentPackage")
-    Command("UpdateClassCommand")[
-        UpdateClassCommand
-        --fields--
-        classId: Int,
-        min: Int,
-        class_status: ClassStatus,
-        remark: String,
-        actual_classroom: Classroom
-        --validations--
-        **1.** Total miniutes cannot exceed package limit
-    ]
-    Command("RemoveClassCommand")
-    Command("UpdateStudentPackageCommand")
-    Command("DuplicateClassCommand")[
-      DuplicateClassCommand
-      --
-      <size:10><:white_check_mark:></size> Classes should not have overlap with any existing classes of all packages of a student
-      
-    ]
-    Command("MoveClassCommand")[
-        MoveClassCommand
-        --fields--
-        classId
-        startTime
-        endTime
-        --validations--
-        **1.** Cannot overlap with any existing classes 
-    ]
-    Command("MoveClassCommand")
+skinparam Arrow {
+    Color $FONT_COLOR
+    FontColor $FONT_COLOR
+    FontSize $FONT_SIZE_SM
 }
 
-Event("ClassMovedEvent")
 
-MoveClassCommand --> Student
-Student --> StudentPackage
-StudentPackage --> ClassMovedEvent
-Event("ClassMovedEvent")
-
-
-
-Policy("ClassOnHolidayMustExtendPolicy")[
-    Class On Holiday Must be Extended Policy
-    --
-    **1.** A class on a custom holiday must be extended to another day of the same time
-    **2.** That day will be the same as the class being extended
-]
-
-' Position ExtendClassCommand directly below the policy
-Command("ExtendClassCommand")
-
-Policy("ExtendClassPolicy")[
-    Extend Class due to Status Change Policy
-    --
-    **1.** When class status was changed to LEGIT_ABSENSE, an extended class will be created
-    **2.** When a class was changed from LEGIT_ABSENSE back to anything else, the corresponding extended class must be removed
-]
-
-
-DayAssignedAsCustomHolidayEvent --> ClassOnHolidayMustExtendPolicy
-ClassOnHolidayMustExtendPolicy --> ExtendClassCommand
-
-together{
-    Event("ClassExtendedEvent")
-    Event("ClassUpdatedEvent")
-    Event("ClassRemovedEvent")
-    Event("StudentPackageUpatedEvent")
-    Event("ClassesCreatedEvent")
+' definition of the Item eventstorming/Element/FacadeCommand
+skinparam file<<FacadeCommand>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #779fae
 }
 
-Student --> StudentPackage
-Teacher --> DuplicateClassCommand
-DuplicateClassCommand --> Student
-Event("ClassDuplicatedEvent")
-Student --> ClassDuplicatedEvent
-Teacher --> CreateCourseCommand
-Teacher --> UpdateCourseCommand
-Teacher --> CreateStudentCommand
-Teacher --> UpdateStudentCommand
-Teacher --> DeleteStudentCommand
-Teacher --> CreateStudentPackageCommand
-Teacher --> UpdateStudentPackageCommand
-Teacher --> CreateClassesCommand
-Teacher --> UpdateClassCommand
-Teacher --> RemoveClassCommand
-Teacher --> ExtendClassCommand
-Teacher --> CreateCustomHolidayCommand
-Teacher --> AssignDayAsCustomHolidyCommand
-
-UpdateStudentPackageCommand --> Student
-Student --> StudentPackage
-CreateClassesCommand --> Student
-
-UpdateClassCommand --> Student
-RemoveClassCommand --> Student
-Student --> StudentPackage
-CreateStudentPackageCommand --> Student
+!procedure FacadeCommand($id, $label="")
+  EsEntity('file', 'FacadeCommand', $id, $label)
+!endprocedure
+' definition of the Item eventstorming/Element/Command
 
 
-StudentPackage --> ClassExtendedEvent
-StudentPackage --> ClassUpdatedEvent
-StudentPackage --> ClassRemovedEvent
-StudentPackage --> StudentPackageUpatedEvent
-StudentPackage --> ClassesCreatedEvent
-ClassUpdatedEvent --> ExtendClassPolicy
-ExtendClassPolicy --> ExtendClassCommand
-ExtendClassPolicy --> RemoveClassCommand
-ExtendClassCommand --> StudentPackage
+skinparam file<<Command>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #aec6cf
+}
+
+!procedure Command($id, $label="")
+  EsEntity('file', 'Command', $id, $label)
+!endprocedure
+
+' definition of the Item eventstorming/Element/Result
+skinparam file<<Result>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #cfcfc4
+}
+
+!procedure Result($id, $label="")
+  EsEntity('file', 'Result', $id, $label)
+!endprocedure
+' definition of the Item eventstorming/Element/Event
 
 
-ClassesCreatedEvent --> ClassOnHolidayMustExtendPolicy
+skinparam file<<Event>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #ffb853
+}
 
-actor Scheduler as Scheduler 
+!procedure Event($id, $label="")
+  EsEntity('file', 'Event', $id, $label)
+!endprocedure
 
-Command("CreateDeadlineComingNotificationCommand")[
-    CreateDeadlineComingNotificationCommand
-    --rules--
-    **1.** When package official_endDate - today = 1month, a notification should be recorded in a table
-    **2.** notification should have an identifier so that repeated notification will not be made again, e.g., {package_id}:deadline_coming:{officiend_endDdate}
-]
-Handler("CreateDeadlineComingNotificationHandler")
-Event("DeadlineComingNotificationCreatedEvent")
-CreateDeadlineComingNotificationCommand --> CreateDeadlineComingNotificationHandler
-CreateDeadlineComingNotificationHandler --> DeadlineComingNotificationCreatedEvent
+' definition of the Item eventstorming/Element/DomainEvent
+skinparam file<<DomainEvent>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #ffcb81
+}
 
-Scheduler --> CreateDeadlineComingNotificationCommand
-StudentPackage --> ClassMovedEvent
-ClassMovedEvent --> ClassOnHolidayMustExtendPolicy
+!procedure DomainEvent($id, $label="")
+  EsEntity('file', 'DomainEvent', $id, $label)
+!endprocedure
 
-Student-[hidden]down-StudentPackage
+' definition of the Item eventstorming/Element/IntegrationEvent
+skinparam file<<IntegrationEvent>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #ffdeaf
+}
 
-@enduml
+!procedure IntegrationEvent($id, $label="")
+  EsEntity('file', 'IntegrationEvent', $id, $label)
+!endprocedure
+
+' definition of the Item eventstorming/Element/Query
+skinparam file<<Query>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #62d862
+}
+
+!procedure Query($id, $label="")
+  EsEntity('file', 'Query', $id, $label)
+!endprocedure
+
+' definition of the Item eventstorming/Element/ReadModel
+skinparam file<<ReadModel>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #77dd77
+}
+
+!procedure ReadModel($id, $label="")
+  EsEntity('file', 'ReadModel', $id, $label)
+!endprocedure
+
+' definition of the Item eventstorming/Element/UserInterface
+skinparam file<<UserInterface>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #a2e8a2
+}
+
+!procedure UserInterface($id, $label="")
+  EsEntity('file', 'UserInterface', $id, $label)
+!endprocedure
+
+' definition of the Item eventstorming/Element/Aggregate
+skinparam file<<Aggregate>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #fdfd9d
+}
+
+!procedure Aggregate($id, $label="")
+  EsEntity('file', 'Aggregate', $id, $label)
+!endprocedure
+
+' definition of the Item eventstorming/Element/Service
+skinparam file<<Service>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #fcfc78
+}
+
+!procedure Service($id, $label="")
+  EsEntity('file', 'Service', $id, $label)
+!endprocedure
+' definition of the Item eventstorming/Element/Policy
+
+
+skinparam file<<Policy>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #b6a2db
+}
+
+!procedure Policy($id, $label="")
+  EsEntity('file', 'Policy', $id, $label)
+!endprocedure
+
+' definition of the Item eventstorming/Element/Saga
+skinparam file<<Saga>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #c9bbe5
+}
+
+!procedure Saga($id, $label="")
+  EsEntity('file', 'Saga', $id, $label)
+!endprocedure
+
+' definition of the Item eventstorming/Element/Process
+skinparam file<<Process>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #ddd4ee
+}
+
+!procedure Process($id, $label="")
+  EsEntity('file', 'Process', $id, $label)
+!endprocedure
+
+' definition of the Item eventstorming/Element/Timer
+skinparam file<<Timer>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #cfcfc4
+}
+
+!procedure Timer($id, $label="")
+  EsEntity('file', 'Timer', $id, $label)
+!endprocedure
+
+' definition of the Item eventstorming/Element/Person
+skinparam actor<<Person>> {
+    StereotypeFontSize 0
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #ffd1dc
+}
+
+!procedure Person($id, $label="")
+  EsEntity('actor', 'Person', $id, $label)
+!endprocedure
+
+' definition of the Item eventstorming/Element/System
+skinparam file<<System>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #ffd1dc
+}
+
+!procedure System($id, $label="")
+  EsEntity('file', 'System', $id, $label)
+!endprocedure
+
+' definition of the Item eventstorming/Element/Comment
+skinparam file<<Comment>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor transparent
+}
+
+!procedure Comment($id, $label="")
+  EsEntity('file', 'Comment', $id, $label)
+!endprocedure
+
+skinparam rectangle<<Handler>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #e8f4fd
+}
+
+!procedure Handler($id, $label="")
+  EsEntity('file', 'Handler', $id, $label)
+!endprocedure
