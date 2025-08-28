@@ -15,21 +15,20 @@
 !return $colorArray[$index]
 !endfunction
 
-!procedure $Flow5($from, $through, $to="", $to2="", $to3)
+!procedure $Flow5($from, $through, $to1, $to2, $to3)
 !$color = $randomColor()
 $from -[$color]-> $through
-$through -[$color]-> $to
-$to -[$color]-> $to2
+$through -[$color]-> $to1
+$to1 -[$color]-> $to2
 $to2 -[$color]-> $to3
-!endif
 !endprocedure
 
 
-!procedure $Flow4($from, $through, $to="", $to2="")
+!procedure $Flow4($from, $through, $to1, $to2)
 !$color = $randomColor()
 $from -[$color]-> $through
-$through -[$color]-> $to
-$to -[$color]-> $to2
+$through -[$color]-> $to1
+$to1 -[$color]-> $to2
 !endprocedure
 
 
