@@ -19,10 +19,9 @@
 !$color = $randomColor()
 
 $from -[$color]-> $through
-$through -[$color]-> $to1
 
-!if ($to1 != "")
-$through -[$color]-> $to2
+!if ($to != "")
+$through -[$color]-> $to1
 !endif
 
 !if ($to2 != "")
