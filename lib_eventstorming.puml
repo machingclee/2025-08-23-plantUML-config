@@ -17,7 +17,6 @@
 
 !procedure $Flow($from, $through, $to1="", $to2="", $to3="", $to4="", $to5="")
 !$color = $randomColor()
-
 $from -[$color]-> $through
 
 !if ($to1 != "")
@@ -61,7 +60,6 @@ skinparam Arrow {
     FontSize $FONT_SIZE_SM
 }
 
-
 ' definition of the Item eventstorming/Element/FacadeCommand
 skinparam file<<FacadeCommand>> {
     StereotypeFontSize $FONT_SIZE_SM
@@ -75,7 +73,6 @@ skinparam file<<FacadeCommand>> {
   EsEntity('file', 'FacadeCommand', $id, $label)
 !endprocedure
 ' definition of the Item eventstorming/Element/Command
-
 
 skinparam file<<Command>> {
     StereotypeFontSize $FONT_SIZE_SM
