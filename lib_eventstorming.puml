@@ -19,8 +19,8 @@
 !$color = $randomColor()
 $from -[$color]-> $through
 $through -[$color]-> $to
-$through -[$color]-> $to2
-$through -[$color]-> $to3
+$to -[$color]-> $to2
+$to2 -[$color]-> $to3
 !endif
 !endprocedure
 
@@ -29,7 +29,7 @@ $through -[$color]-> $to3
 !$color = $randomColor()
 $from -[$color]-> $through
 $through -[$color]-> $to
-$through -[$color]-> $to2
+$to -[$color]-> $to2
 !endprocedure
 
 
