@@ -20,7 +20,7 @@
 
 $from -[$color]-> $through
 
-!if ($to != "")
+!if ($to1 != "")
 $through -[$color]-> $to1
 !endif
 
