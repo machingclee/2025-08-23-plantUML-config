@@ -30,7 +30,7 @@ $to5 -[$color]-> $to6 : $flowCounter
 !endprocedure
 
 
-!procedure $Flow7($from, $through, $to1, $to2, $to3, $to4, $to5)
+!procedure $Flow7($from, $through, $to1, $to2, $to3, $to4, $to5, $evt1="", $evt2="", $evt3="")
 !$flowCounter = $flowCounter + 1
 
 !$color = $randomColor()
@@ -40,10 +40,22 @@ $to1 -[$color]-> $to2 : $flowCounter
 $to2 -[$color]-> $to3 : $flowCounter
 $to3 -[$color]-> $to4 : $flowCounter
 $to4 -[$color]-> $to5 : $flowCounter
+
+
+!if ($evt1 != "")
+$to5 -[$color]-> $evt1 : $flowCounter
+!endif
+!if ($evt2 != "")
+$to5 -[$color]-> $evt2 : $flowCounter
+!endif
+!if ($evt3 != "")
+$to5 -[$color]-> $evt3 : $flowCounter
+!endif
+
 !endprocedure
 
 
-!procedure $Flow6($from, $through, $to1, $to2, $to3, $to4)
+!procedure $Flow6($from, $through, $to1, $to2, $to3, $to4, $evt1="", $evt2="", $evt3="")
 !$flowCounter = $flowCounter + 1
 
 !$color = $randomColor()
@@ -52,9 +64,20 @@ $through -[$color]-> $to1
 $to1 -[$color]-> $to2
 $to2 -[$color]-> $to3
 $to3 -[$color]-> $to4
+
+!if ($evt1 != "")
+$to4 -[$color]-> $evt1 : $flowCounter
+!endif
+!if ($evt2 != "")
+$to4 -[$color]-> $evt2 : $flowCounter
+!endif
+!if ($evt3 != "")
+$to4 -[$color]-> $evt3 : $flowCounter
+!endif
+
 !endprocedure
 
-!procedure $Flow5($from, $through, $to1, $to2, $to3)
+!procedure $Flow5($from, $through, $to1, $to2, $to3, $evt1="", $evt2="", $evt3="")
 !$flowCounter = $flowCounter + 1
 
 !$color = $randomColor()
@@ -62,16 +85,38 @@ $from -[$color]-> $through : $flowCounter
 $through -[$color]-> $to1 : $flowCounter
 $to1 -[$color]-> $to2 : $flowCounter
 $to2 -[$color]-> $to3 : $flowCounter
+
+!if ($evt1 != "")
+$to3 -[$color]-> $evt1 : $flowCounter
+!endif
+!if ($evt2 != "")
+$to3 -[$color]-> $evt2 : $flowCounter
+!endif
+!if ($evt3 != "")
+$to3 -[$color]-> $evt3 : $flowCounter
+!endif
+
 !endprocedure
 
 
-!procedure $Flow4($from, $through, $to1, $to2)
+!procedure $Flow4($from, $through, $to1, $to2, $evt1="", $evt2="", $evt3="")
 !$flowCounter = $flowCounter + 1
 
 !$color = $randomColor()
 $from -[$color]-> $through : $flowCounter
 $through -[$color]-> $to1 : $flowCounter
 $to1 -[$color]-> $to2 : $flowCounter
+
+!if ($evt1 != "")
+$to2 -[$color]-> $evt1 : $flowCounter
+!endif
+!if ($evt2 != "")
+$to2 -[$color]-> $evt2 : $flowCounter
+!endif
+!if ($evt3 != "")
+$to2 -[$color]-> $evt3 : $flowCounter
+!endif
+
 !endprocedure
 
 
