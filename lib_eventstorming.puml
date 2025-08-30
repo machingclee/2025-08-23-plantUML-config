@@ -51,7 +51,6 @@ $to5 -[$color]-> $evt2 : $flowCounter
 !if ($evt3 != "")
 $to5 -[$color]-> $evt3 : $flowCounter
 !endif
-
 !endprocedure
 
 
@@ -74,7 +73,6 @@ $to4 -[$color]-> $evt2 : $flowCounter
 !if ($evt3 != "")
 $to4 -[$color]-> $evt3 : $flowCounter
 !endif
-
 !endprocedure
 
 !procedure $Flow5($from, $through, $to1, $to2, $to3, $evt1="", $evt2="", $evt3="")
@@ -95,9 +93,7 @@ $to3 -[$color]-> $evt2 : $flowCounter
 !if ($evt3 != "")
 $to3 -[$color]-> $evt3 : $flowCounter
 !endif
-
 !endprocedure
-
 
 !procedure $Flow4($from, $through, $to1, $to2, $evt1="", $evt2="", $evt3="")
 !$flowCounter = $flowCounter + 1
@@ -116,7 +112,6 @@ $to2 -[$color]-> $evt2 : $flowCounter
 !if ($evt3 != "")
 $to2 -[$color]-> $evt3 : $flowCounter
 !endif
-
 !endprocedure
 
 
