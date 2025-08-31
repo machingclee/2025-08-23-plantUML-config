@@ -114,6 +114,25 @@ $to2 -[$color]-> $evt3 : $flowCounter
 !endif
 !endprocedure
 
+!procedure $Flow3($from, $through, $to1, $evt1="", $evt2="", $evt3="")
+!$flowCounter = $flowCounter + 1
+
+!$color = $randomColor()
+$from -[$color]-> $through : $flowCounter
+$flowCounter -[$color]-> $through : $to1
+
+!if ($evt1 != "")
+$to1 -[$color]-> $evt1 : $flowCounter
+!endif
+!if ($evt2 != "")
+$to1 -[$color]-> $evt2 : $flowCounter
+!endif
+!if ($evt3 != "")
+$to1 -[$color]-> $evt3 : $flowCounter
+!endif
+!endprocedure
+
+
 !procedure $Flow2($from, $through, $evt1="", $evt2="", $evt3="")
 !$flowCounter = $flowCounter + 1
 
