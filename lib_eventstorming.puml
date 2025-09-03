@@ -122,13 +122,13 @@ $from -[$color]-> $through : $flowCounter
 $through -[$color]-> $to1 : $flowCounter
 
 !if ($evt1 != "")
-$through -[$color]-> $evt1 : $flowCounter
+$to1 -[$color]-> $evt1 : $flowCounter
 !endif
 !if ($evt2 != "")
-$through -[$color]-> $evt2 : $flowCounter
+$to1 -[$color]-> $evt2 : $flowCounter
 !endif
 !if ($evt3 != "")
-$through -[$color]-> $evt3 : $flowCounter
+$to1 -[$color]-> $evt3 : $flowCounter
 !endif
 !endprocedure
 
@@ -239,6 +239,19 @@ skinparam file<<Result>> {
   EsEntity('file', 'Result', $id, $label)
 !endprocedure
 ' definition of the Item eventstorming/Element/Event
+
+
+skinparam file<<TransactionalEvent>> {
+    StereotypeFontSize $FONT_SIZE_SM
+    shadowing false
+    FontColor $FONT_COLOR
+    BorderColor $FONT_COLOR
+    BackgroundColor #ffb853
+}
+
+!procedure TransactionalEvent($id, $label="")
+  EsEntity('file', 'TransactionalEvent', $id, $label)
+!endprocedure
 
 
 skinparam file<<Event>> {
