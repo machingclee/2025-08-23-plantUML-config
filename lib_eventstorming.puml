@@ -478,7 +478,7 @@ skinparam rectangle<<Handler>> {
   !endif
 !endfunction
 
-!function $setAggregateCounter($aggregateType, $value)
+!procedure $setAggregateCounter($aggregateType, $value)
   !$pattern = $aggregateType + ":"
   !if (%strpos($aggregateCounters, $pattern) >= 0)
     !$start = %strpos($aggregateCounters, $pattern)
@@ -493,7 +493,7 @@ skinparam rectangle<<Handler>> {
   !else
     !$aggregateCounters = $aggregateCounters + $aggregateType + ":" + $value + ";"
   !endif
-!endfunction
+!endprocedure
 
 !function $createContextualAggregate($aggregateType, $command)
   !$counter = $getAggregateCounter($aggregateType)
