@@ -141,24 +141,55 @@ $to1 -[$color]-> $evt3 : $flowCounter
 !endif
 !endprocedure
 
+!function $processElement($element, $command)
+  !if ($element == "Student" || $element == "Course" || $element == "User" || $element == "Package" || $element == "Class")
+    !return $createContextualAggregate($element, $command)
+  !else
+    !return $element
+  !endif
+!endfunction
+
 !procedure $SmartFlow4($from, $through, $to1, $to2, $evt1="", $evt2="", $evt3="")
 !$flowCounter = $flowCounter + 1
 !$color = $randomColor()
 
-!$actualThrough = $createContextualAggregate($through, $from)
+!$actualThrough = $processElement($through, $from)
+!$actualTo1 = $processElement($to1, $from)
+!$actualTo2 = $processElement($to2, $from)
 
 $from -[$color]-> $actualThrough : $flowCounter
-$actualThrough -[$color]-> $to1 : $flowCounter
-$to1 -[$color]-> $to2 : $flowCounter
+$actualThrough -[$color]-> $actualTo1 : $flowCounter
+$actualTo1 -[$color]-> $actualTo2 : $flowCounter
 
 !if ($evt1 != "")
-$to2 -[$color]-> $evt1 : $flowCounter
+$actualTo2 -[$color]-> $evt1 : $flowCounter
 !endif
 !if ($evt2 != "")
-$to2 -[$color]-> $evt2 : $flowCounter
+$actualTo2 -[$color]-> $evt2 : $flowCounter
 !endif
 !if ($evt3 != "")
-$to2 -[$color]-> $evt3 : $flowCounter
+$actualTo2 -[$color]-> $evt3 : $flowCounter
+!endif
+!endprocedure
+
+!procedure $SmartFlow3($from, $through, $to1, $evt1="", $evt2="", $evt3="")
+!$flowCounter = $flowCounter + 1
+!$color = $randomColor()
+
+!$actualThrough = $processElement($through, $from)
+!$actualTo1 = $processElement($to1, $from)
+
+$from -[$color]-> $actualThrough : $flowCounter
+$actualThrough -[$color]-> $actualTo1 : $flowCounter
+
+!if ($evt1 != "")
+$actualTo1 -[$color]-> $evt1 : $flowCounter
+!endif
+!if ($evt2 != "")
+$actualTo1 -[$color]-> $evt2 : $flowCounter
+!endif
+!if ($evt3 != "")
+$actualTo1 -[$color]-> $evt3 : $flowCounter
 !endif
 !endprocedure
 
@@ -166,21 +197,24 @@ $to2 -[$color]-> $evt3 : $flowCounter
 !$flowCounter = $flowCounter + 1
 !$color = $randomColor()
 
-!$actualThrough = $createContextualAggregate($through, $from)
+!$actualThrough = $processElement($through, $from)
+!$actualTo1 = $processElement($to1, $from)
+!$actualTo2 = $processElement($to2, $from)
+!$actualTo3 = $processElement($to3, $from)
 
 $from -[$color]-> $actualThrough : $flowCounter
-$actualThrough -[$color]-> $to1 : $flowCounter
-$to1 -[$color]-> $to2 : $flowCounter
-$to2 -[$color]-> $to3 : $flowCounter
+$actualThrough -[$color]-> $actualTo1 : $flowCounter
+$actualTo1 -[$color]-> $actualTo2 : $flowCounter
+$actualTo2 -[$color]-> $actualTo3 : $flowCounter
 
 !if ($evt1 != "")
-$to3 -[$color]-> $evt1 : $flowCounter
+$actualTo3 -[$color]-> $evt1 : $flowCounter
 !endif
 !if ($evt2 != "")
-$to3 -[$color]-> $evt2 : $flowCounter
+$actualTo3 -[$color]-> $evt2 : $flowCounter
 !endif
 !if ($evt3 != "")
-$to3 -[$color]-> $evt3 : $flowCounter
+$actualTo3 -[$color]-> $evt3 : $flowCounter
 !endif
 !endprocedure
 
@@ -188,62 +222,27 @@ $to3 -[$color]-> $evt3 : $flowCounter
 !$flowCounter = $flowCounter + 1
 !$color = $randomColor()
 
-!$actualThrough = $createContextualAggregate($through, $from)
+!$actualThrough = $processElement($through, $from)
+!$actualTo1 = $processElement($to1, $from)
+!$actualTo2 = $processElement($to2, $from)
+!$actualTo3 = $processElement($to3, $from)
+!$actualTo4 = $processElement($to4, $from)
 
 $from -[$color]-> $actualThrough
-$actualThrough -[$color]-> $to1
-$to1 -[$color]-> $to2
-$to2 -[$color]-> $to3
-$to3 -[$color]-> $to4
+$actualThrough -[$color]-> $actualTo1
+$actualTo1 -[$color]-> $actualTo2
+$actualTo2 -[$color]-> $actualTo3
+$actualTo3 -[$color]-> $actualTo4
 
 !if ($evt1 != "")
-$to4 -[$color]-> $evt1 : $flowCounter
+$actualTo4 -[$color]-> $evt1 : $flowCounter
 !endif
 !if ($evt2 != "")
-$to4 -[$color]-> $evt2 : $flowCounter
+$actualTo4 -[$color]-> $evt2 : $flowCounter
 !endif
 !if ($evt3 != "")
-$to4 -[$color]-> $evt3 : $flowCounter
+$actualTo4 -[$color]-> $evt3 : $flowCounter
 !endif
-!endprocedure
-
-!procedure $SmartFlow7($from, $through, $to1, $to2, $to3, $to4, $to5, $evt1="", $evt2="", $evt3="")
-!$flowCounter = $flowCounter + 1
-!$color = $randomColor()
-
-!$actualThrough = $createContextualAggregate($through, $from)
-
-$from -[$color]-> $actualThrough : $flowCounter
-$actualThrough -[$color]-> $to1 : $flowCounter
-$to1 -[$color]-> $to2 : $flowCounter
-$to2 -[$color]-> $to3 : $flowCounter
-$to3 -[$color]-> $to4 : $flowCounter
-$to4 -[$color]-> $to5 : $flowCounter
-
-!if ($evt1 != "")
-$to5 -[$color]-> $evt1 : $flowCounter
-!endif
-!if ($evt2 != "")
-$to5 -[$color]-> $evt2 : $flowCounter
-!endif
-!if ($evt3 != "")
-$to5 -[$color]-> $evt3 : $flowCounter
-!endif
-!endprocedure
-
-!procedure $SmartFlow8($from, $through, $to1, $to2, $to3, $to4, $to5, $to6)
-!$flowCounter = $flowCounter + 1
-!$color = $randomColor()
-
-!$actualThrough = $createContextualAggregate($through, $from)
-
-$from -[$color]-> $actualThrough : $flowCounter
-$actualThrough -[$color]-> $to1 : $flowCounter
-$to1 -[$color]-> $to2 : $flowCounter
-$to2 -[$color]-> $to3 : $flowCounter
-$to3 -[$color]-> $to4 : $flowCounter
-$to4 -[$color]-> $to5 : $flowCounter
-$to5 -[$color]-> $to6 : $flowCounter
 !endprocedure
 
 !procedure EsEntity($shape, $stereotype, $id, $label="")
