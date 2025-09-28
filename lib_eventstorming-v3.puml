@@ -622,3 +622,151 @@ $to1 -[$color]-> $evt2 : $flowCounter
 $to1 -[$color]-> $evt3 : $flowCounter
 !endif
 !endprocedure
+
+!procedure $SmartFlow5($from, $through, $to1, $to2, $to3, $evt1="", $evt2="", $evt3="")
+!$flowCounter = $flowCounter + 1
+!$color = $randomColor()
+
+!$actualThrough = $createContextualAggregate($through, $from)
+
+$from -[$color]-> $actualThrough : $flowCounter
+$actualThrough -[$color]-> $to1 : $flowCounter
+$to1 -[$color]-> $to2 : $flowCounter
+$to2 -[$color]-> $to3 : $flowCounter
+
+!if ($evt1 != "")
+$to3 -[$color]-> $evt1 : $flowCounter
+!endif
+!if ($evt2 != "")
+$to3 -[$color]-> $evt2 : $flowCounter
+!endif
+!if ($evt3 != "")
+$to3 -[$color]-> $evt3 : $flowCounter
+!endif
+!endprocedure
+
+!procedure $SmartFlow6($from, $through, $to1, $to2, $to3, $to4, $evt1="", $evt2="", $evt3="")
+!$flowCounter = $flowCounter + 1
+!$color = $randomColor()
+
+!$actualThrough = $createContextualAggregate($through, $from)
+
+$from -[$color]-> $actualThrough
+$actualThrough -[$color]-> $to1
+$to1 -[$color]-> $to2
+$to2 -[$color]-> $to3
+$to3 -[$color]-> $to4
+
+!if ($evt1 != "")
+$to4 -[$color]-> $evt1 : $flowCounter
+!endif
+!if ($evt2 != "")
+$to4 -[$color]-> $evt2 : $flowCounter
+!endif
+!if ($evt3 != "")
+$to4 -[$color]-> $evt3 : $flowCounter
+!endif
+!endprocedure
+
+!procedure $SmartFlow7($from, $through, $to1, $to2, $to3, $to4, $to5, $evt1="", $evt2="", $evt3="")
+!$flowCounter = $flowCounter + 1
+!$color = $randomColor()
+
+!$actualThrough = $createContextualAggregate($through, $from)
+
+$from -[$color]-> $actualThrough : $flowCounter
+$actualThrough -[$color]-> $to1 : $flowCounter
+$to1 -[$color]-> $to2 : $flowCounter
+$to2 -[$color]-> $to3 : $flowCounter
+$to3 -[$color]-> $to4 : $flowCounter
+$to4 -[$color]-> $to5 : $flowCounter
+
+!if ($evt1 != "")
+$to5 -[$color]-> $evt1 : $flowCounter
+!endif
+!if ($evt2 != "")
+$to5 -[$color]-> $evt2 : $flowCounter
+!endif
+!if ($evt3 != "")
+$to5 -[$color]-> $evt3 : $flowCounter
+!endif
+!endprocedure
+
+!procedure $SmartFlow8($from, $through, $to1, $to2, $to3, $to4, $to5, $to6)
+!$flowCounter = $flowCounter + 1
+!$color = $randomColor()
+
+!$actualThrough = $createContextualAggregate($through, $from)
+
+$from -[$color]-> $actualThrough : $flowCounter
+$actualThrough -[$color]-> $to1 : $flowCounter
+$to1 -[$color]-> $to2 : $flowCounter
+$to2 -[$color]-> $to3 : $flowCounter
+$to3 -[$color]-> $to4 : $flowCounter
+$to4 -[$color]-> $to5 : $flowCounter
+$to5 -[$color]-> $to6 : $flowCounter
+!endprocedure
+
+!procedure $SmartFlow2($from, $through, $evt1="", $evt2="", $evt3="")
+!$flowCounter = $flowCounter + 1
+!$color = $randomColor()
+
+!$actualThrough = $createContextualAggregate($through, $from)
+
+$from -[$color]-> $actualThrough : $flowCounter
+
+!if ($evt1 != "")
+$actualThrough -[$color]-> $evt1 : $flowCounter
+!endif
+!if ($evt2 != "")
+$actualThrough -[$color]-> $evt2 : $flowCounter
+!endif
+!if ($evt3 != "")
+$actualThrough -[$color]-> $evt3 : $flowCounter
+!endif
+!endprocedure
+
+!procedure $SmartFlow3($from, $through, $to1, $evt1="", $evt2="", $evt3="")
+!$flowCounter = $flowCounter + 1
+!$color = $randomColor()
+
+!$actualThrough = $createContextualAggregate($through, $from)
+
+$from -[$color]-> $actualThrough : $flowCounter
+$actualThrough -[$color]-> $to1 : $flowCounter
+
+!if ($evt1 != "")
+$to1 -[$color]-> $evt1 : $flowCounter
+!endif
+!if ($evt2 != "")
+$to1 -[$color]-> $evt2 : $flowCounter
+!endif
+!if ($evt3 != "")
+$to1 -[$color]-> $evt3 : $flowCounter
+!endif
+!endprocedure
+
+!procedure $SmartFlow($from, $through, $to="", $to2="", $to3="", $to4="", $to5="")
+!$flowCounter = $flowCounter + 1
+!$color = $randomColor()
+
+!$actualThrough = $createContextualAggregate($through, $from)
+
+$from -[$color]-> $actualThrough : $flowCounter
+
+!if ($to != "")
+$actualThrough -[$color]-> $to : $flowCounter
+!endif
+!if ($to2 != "")
+$actualThrough -[$color]-> $to2 : $flowCounter
+!endif
+!if ($to3 != "")
+$actualThrough -[$color]-> $to3 : $flowCounter
+!endif
+!if ($to4 != "")
+$actualThrough -[$color]-> $to4 : $flowCounter
+!endif
+!if ($to5 != "")
+$actualThrough -[$color]-> $to5 : $flowCounter
+!endif
+!endprocedure
