@@ -460,3 +460,162 @@ skinparam rectangle<<Handler>> {
 !procedure Handler($id, $label="")
   EsEntity('file', 'Handler', $id, $label)
 !endprocedure
+
+!global $aggregateCounters = ""
+!global $aggregateInstances = ""
+
+!function $getAggregateCounter($aggregateType)
+  !if (%strpos($aggregateCounters, $aggregateType + ":") >= 0)
+    !$start = %strpos($aggregateCounters, $aggregateType + ":") + %strlen($aggregateType + ":")
+    !$end = %strpos($aggregateCounters, ";", $start)
+    !if ($end < 0)
+      !$end = %strlen($aggregateCounters)
+    !endif
+    !$counter = %substr($aggregateCounters, $start, $end - $start)
+    !return %intval($counter)
+  !else
+    !return 0
+  !endif
+!endfunction
+
+!function $setAggregateCounter($aggregateType, $value)
+  !$pattern = $aggregateType + ":"
+  !if (%strpos($aggregateCounters, $pattern) >= 0)
+    !$start = %strpos($aggregateCounters, $pattern)
+    !$valueStart = $start + %strlen($pattern)
+    !$end = %strpos($aggregateCounters, ";", $valueStart)
+    !if ($end < 0)
+      !$end = %strlen($aggregateCounters)
+    !endif
+    !$before = %substr($aggregateCounters, 0, $start)
+    !$after = %substr($aggregateCounters, $end)
+    !$aggregateCounters = $before + $pattern + $value + $after
+  !else
+    !$aggregateCounters = $aggregateCounters + $aggregateType + ":" + $value + ";"
+  !endif
+!endfunction
+
+!function $createContextualAggregate($aggregateType, $command)
+  !$counter = $getAggregateCounter($aggregateType)
+  !$counter = $counter + 1
+  $setAggregateCounter($aggregateType, $counter)
+  
+  !$context = $aggregateType
+  !if (%strpos($command, "Package") >= 0)
+    !$context = $aggregateType + "Package"
+  !elseif (%strpos($command, "Class") >= 0)
+    !$context = $aggregateType + "Class"  
+  !elseif (%strpos($command, "Delete") >= 0)
+    !$context = $aggregateType + "Delete"
+  !elseif (%strpos($command, "Create") >= 0)
+    !$context = $aggregateType + "Create"
+  !elseif (%strpos($command, "Update") >= 0)
+    !$context = $aggregateType + "Update"
+  !endif
+  
+  !$aggregateName = $context + $counter
+  !return $aggregateName
+!endfunction
+
+!function $getOrCreateAggregate($aggregateType, $command)
+  !$newAggregateName = $createContextualAggregate($aggregateType, $command)
+  
+  ' Check if this is a known aggregate type and create accordingly
+  !if ($aggregateType == "Student")
+    Aggregate($newAggregateName, $aggregateType)
+  !elseif ($aggregateType == "Course")
+    Aggregate($newAggregateName, $aggregateType)
+  !elseif ($aggregateType == "Class")
+    Aggregate($newAggregateName, $aggregateType)
+  !elseif ($aggregateType == "Package")
+    Aggregate($newAggregateName, $aggregateType)
+  !else
+    ' Generic aggregate creation
+    Aggregate($newAggregateName, $aggregateType)
+  !endif
+  
+  !return $newAggregateName
+!endfunction
+
+' Generic smart flow procedures
+!procedure $SmartFlow($from, $through, $to="", $to2="", $to3="", $to4="", $to5="")
+!$flowCounter = $flowCounter + 1
+!$color = $randomColor()
+
+' Check if 'through' should be auto-generated
+!if (%strpos($aggregateInstances, $through + ";") < 0 && $through != "")
+  !$actualThrough = $getOrCreateAggregate($through, $from)
+  !$aggregateInstances = $aggregateInstances + $through + ";"
+!else
+  !$actualThrough = $through
+!endif
+
+$from -[$color]-> $actualThrough : $flowCounter
+
+!if ($to != "")
+$actualThrough -[$color]-> $to : $flowCounter
+!endif
+!if ($to2 != "")
+$actualThrough -[$color]-> $to2 : $flowCounter
+!endif
+!if ($to3 != "")
+$actualThrough -[$color]-> $to3 : $flowCounter
+!endif
+!if ($to4 != "")
+$actualThrough -[$color]-> $to4 : $flowCounter
+!endif
+!if ($to5 != "")
+$actualThrough -[$color]-> $to5 : $flowCounter
+!endif
+!endprocedure
+
+!procedure $SmartFlow4($from, $through, $to1, $to2, $evt1="", $evt2="", $evt3="")
+!$flowCounter = $flowCounter + 1
+!$color = $randomColor()
+
+!if (%strpos($aggregateInstances, $through + ";") < 0 && $through != "")
+  !$actualThrough = $getOrCreateAggregate($through, $from)
+  !$aggregateInstances = $aggregateInstances + $through + ";"
+!else
+  !$actualThrough = $through
+!endif
+
+$from -[$color]-> $actualThrough : $flowCounter
+$actualThrough -[$color]-> $to1 : $flowCounter
+$to1 -[$color]-> $to2 : $flowCounter
+
+!if ($evt1 != "")
+$to2 -[$color]-> $evt1 : $flowCounter
+!endif
+!if ($evt2 != "")
+$to2 -[$color]-> $evt2 : $flowCounter
+!endif
+!if ($evt3 != "")
+$to2 -[$color]-> $evt3 : $flowCounter
+!endif
+!endprocedure
+
+!procedure $SmartFlow3($from, $through, $to1, $evt1="", $evt2="", $evt3="")
+!$flowCounter = $flowCounter + 1
+!$color = $randomColor()
+
+!if (%strpos($aggregateInstances, $through + ";") < 0 && $through != "")
+  !$actualThrough = $getOrCreateAggregate($through, $from)
+  !$aggregateInstances = $aggregateInstances + $through + ";"
+!else
+  !$actualThrough = $through
+!endif
+
+$from -[$color]-> $actualThrough : $flowCounter
+$actualThrough -[$color]-> $to1 : $flowCounter
+
+!if ($evt1 != "")
+$to1 -[$color]-> $evt1 : $flowCounter
+!endif
+!if ($evt2 != "")
+$to1 -[$color]-> $evt2 : $flowCounter
+!endif
+!if ($evt3 != "")
+$to1 -[$color]-> $evt3 : $flowCounter
+!endif
+!endprocedure
